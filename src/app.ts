@@ -2,9 +2,9 @@ import express, { json, Request, Response } from 'express';
 import 'express-async-errors';
 import httpStatus from 'http-status';
 import cors from 'cors';
-import recordsRouter from './routers/records-router';
 import { authenticationRouter } from './routers/authentication-router';
 import { usersRouter } from './routers/users-router';
+import { recordsRouter } from './routers/records-router';
 import errorHandlingMiddleware from '@/middlewares/errors-handling-middleware';
 
 const app = express();

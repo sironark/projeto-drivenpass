@@ -53,8 +53,8 @@ export async function deleteCredential(req: AuthenticatedRequest, res: Response)
   const id = Number(req.params.id);
   if (!id || isNaN(id) || id < 1) throw invalidParamError('Id param not valid!');
 
-  const { userId } = req;
-  const credential = await recordService.deleteCredential(userId, id);
+  const userId = req.userId;
+  await recordService.deleteCredential(userId, id);
 
-  res.status(httpStatus.OK).send(credential);
+  res.sendStatus(httpStatus.OK);
 }

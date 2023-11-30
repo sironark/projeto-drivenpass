@@ -33,7 +33,7 @@ async function createCredential(userId: number, url: string, username: string, p
 
 async function deleteCredential(userId: number, id: number) {
   const idExists = await recordRepository.getCredentialsById(userId, id);
-  if (!idExists) throw notFoundError('Credential not found or is not belong to the user!');
+  if (idExists.length == 0) throw notFoundError('Credential not found or is not belong to the user!');
 
   const credential = await recordRepository.deleteCredential(userId, id);
   return credential;

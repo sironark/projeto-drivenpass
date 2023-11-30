@@ -9,6 +9,6 @@ const recordsRouter = Router();
 recordsRouter.get('/records', authenticateToken, getRecords);
 recordsRouter.get('/records/:id', authenticateToken, getRecordsById);
 recordsRouter.post('/records', authenticateToken, validateSchemaMiddleware(CredentialSchema), createCredential);
-recordsRouter.delete('records/:id', authenticateToken, deleteCredential);
+recordsRouter.delete('/records/:id', authenticateToken, deleteCredential);
 
-export default recordsRouter;
+export { recordsRouter };
