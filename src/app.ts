@@ -2,7 +2,9 @@ import express, { json, Request, Response } from 'express';
 import 'express-async-errors';
 import httpStatus from 'http-status';
 import cors from 'cors';
-import gamesRouter from './routers/template-router';
+import recordsRouter from './routers/records-router';
+import { authenticationRouter } from './routers/authentication-router';
+import { usersRouter } from './routers/users-router';
 import errorHandlingMiddleware from '@/middlewares/errors-handling-middleware';
 
 const app = express();
@@ -16,7 +18,9 @@ app.get('/health', (req: Request, res: Response) => {
 });
 
 // Endpoints
-app.use('/games', gamesRouter);
+app.use('/pass', recordsRouter);
+app.use('/signin', authenticationRouter);
+app.use('/signup', usersRouter);
 
 // Async errors to detect some "throw" error
 app.use(errorHandlingMiddleware);
