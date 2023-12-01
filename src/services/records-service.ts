@@ -11,13 +11,11 @@ async function getRecords(userId: number) {
 }
 
 async function getRecordsById(userId: number, id: number) {
-  const existsSomeCredential = await recordRepository.getCredentialsByUser(userId);
-  if (!existsSomeCredential) throw notFoundError('Any credential was found to this user');
+  const credential = await recordRepository.getCredentialById(id);
+  if (!credential) throw notFoundError('Network was not found');
+  if (credential.userId != userId) throw invalidDataError('This network is not yours!');
 
-  const credential = await recordRepository.getCredentialsById(userId, id);
-  if (credential.length == 0) throw invalidDataError('Credential Id does not belong to the user');
-
-  return credential;
+  return [credential];
 }
 
 async function createCredential(userId: number, url: string, username: string, password: string, title: string) {
@@ -39,9 +37,44 @@ async function deleteCredential(userId: number, id: number) {
   return credential;
 }
 
+async function createNetwork(userId: number, network: string, password: string, title: string) {
+  const alreadyExists = await recordRepository.getNetworkByName(network, userId);
+  if (alreadyExists) throw conflictError('Network already exists at your records!');
+
+  const createdNetwork = await recordRepository.createNetwork(userId, network, password, title);
+  return createdNetwork;
+}
+
+async function getNetworks(userId: number) {
+  const networks = await recordRepository.getNetworks(userId);
+
+  return { networks };
+}
+
+async function getNetworkById(userId: number, id: number) {
+  const userNetwork = await recordRepository.getNetworkById(id);
+  if (!userNetwork) throw notFoundError('Network was not found');
+  if (userNetwork.userId != userId) throw invalidDataError('This network is not yours!');
+
+  return [userNetwork];
+}
+
+async function deleteNetwork(userId: number, id: number) {
+  const userNetwork = await recordRepository.getNetworkById(id);
+  if (!userNetwork) throw notFoundError('Network was not found');
+  if (userNetwork.userId != userId) throw invalidDataError('This network is not yours!');
+
+  const deleted = await recordRepository.deleteNetwork(userId, id);
+  return deleted;
+}
+
 export const recordService = {
   getRecords,
   createCredential,
   getRecordsById,
   deleteCredential,
+  createNetwork,
+  getNetworks,
+  getNetworkById,
+  deleteNetwork,
 };

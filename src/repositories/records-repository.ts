@@ -19,6 +19,15 @@ async function getCredentialsById(userId: number, id: number) {
   return credential;
 }
 
+async function getCredentialById(id: number) {
+  const credential = await prisma.credential.findFirst({
+    where: {
+      id,
+    },
+  });
+  return credential;
+}
+
 async function getCredentialsByUserTitle(userId: number, title: string) {
   const credentials = await prisma.credential.findFirst({
     where: {
@@ -49,7 +58,7 @@ async function getCredentialByUrl(url: string, userId: number) {
 }
 
 async function createCredential(userId: number, url: string, username: string, password: string, title: string) {
-  const game = await prisma.credential.create({
+  const credential = await prisma.credential.create({
     data: {
       title,
       url,
@@ -58,7 +67,7 @@ async function createCredential(userId: number, url: string, username: string, p
       userId,
     },
   });
-  return game;
+  return credential;
 }
 
 async function deleteCredential(userId: number, id: number) {
@@ -71,6 +80,56 @@ async function deleteCredential(userId: number, id: number) {
   return credential;
 }
 
+async function createNetwork(userId: number, network: string, password: string, title: string) {
+  const createdNetwork = await prisma.network.create({
+    data: {
+      title,
+      network,
+      password,
+      userId,
+    },
+  });
+  return createdNetwork;
+}
+
+async function getNetworkByName(network: string, userId: number) {
+  const gotNetwork = await prisma.network.findFirst({
+    where: {
+      network,
+      userId,
+    },
+  });
+  return gotNetwork;
+}
+
+async function getNetworks(userId: number) {
+  const gotNetwork = await prisma.network.findMany({
+    where: {
+      userId,
+    },
+  });
+  return gotNetwork;
+}
+
+async function getNetworkById(netId: number) {
+  const gotNetwork = await prisma.network.findFirst({
+    where: {
+      id: netId,
+    },
+  });
+  return gotNetwork;
+}
+
+async function deleteNetwork(userId: number, id: number) {
+  const deleted = await prisma.network.delete({
+    where: {
+      userId,
+      id,
+    },
+  });
+  return deleted;
+}
+
 export const recordRepository = {
   getCredentialsByUser,
   getNetworksByUser,
@@ -79,4 +138,10 @@ export const recordRepository = {
   createCredential,
   getCredentialsById,
   deleteCredential,
+  createNetwork,
+  getNetworkByName,
+  getNetworks,
+  getNetworkById,
+  deleteNetwork,
+  getCredentialById,
 };
