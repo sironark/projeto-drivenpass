@@ -5,11 +5,12 @@ import { recordService } from '@/services/records-service';
 import { invalidParamError } from '@/errors/invalid-param-error';
 import { AuthenticatedRequest } from '@/middlewares/authentication-middleware';
 
+export const cryptr = new Cryptr('myTotallySecretKey');
+
 export async function getRecords(req: AuthenticatedRequest, res: Response) {
   const userId = req.userId;
 
   const records = await recordService.getRecords(userId);
-  const cryptr = new Cryptr('myTotallySecretKey');
 
   const decryptedData = records.credentials.map((credential) => ({
     ...credential,
@@ -27,7 +28,6 @@ export async function getRecordsById(req: AuthenticatedRequest, res: Response) {
   if (!id || isNaN(id) || id < 1) throw invalidParamError('Id param not valid!');
 
   const records = await recordService.getRecordsById(userId, id);
-  const cryptr = new Cryptr('myTotallySecretKey');
 
   const decryptedData = records.map((credential) => ({
     ...credential,
@@ -41,7 +41,7 @@ export async function getRecordsById(req: AuthenticatedRequest, res: Response) {
 export async function createCredential(req: AuthenticatedRequest, res: Response) {
   const { url, username, password, title } = req.body;
   const { userId } = req;
-  const cryptr = new Cryptr('myTotallySecretKey');
+
   const passwordhash = cryptr.encrypt(password);
 
   await recordService.createCredential(userId, url, username, passwordhash, title);
@@ -63,7 +63,6 @@ export async function createNetwork(req: AuthenticatedRequest, res: Response) {
   const { network, password, title } = req.body;
   const { userId } = req;
 
-  const cryptr = new Cryptr('myTotallySecretKey');
   const passwordhash = cryptr.encrypt(password);
 
   await recordService.createNetwork(userId, network, passwordhash, title);
@@ -75,7 +74,6 @@ export async function getNetworks(req: AuthenticatedRequest, res: Response) {
   const userId = req.userId;
 
   const records = await recordService.getNetworks(userId);
-  const cryptr = new Cryptr('myTotallySecretKey');
 
   const decryptedData = records.networks.map((network) => ({
     ...network,
@@ -93,7 +91,6 @@ export async function getNetworkById(req: AuthenticatedRequest, res: Response) {
   if (!id || isNaN(id) || id < 1) throw invalidParamError('Id param not valid!');
 
   const records = await recordService.getNetworkById(userId, id);
-  const cryptr = new Cryptr('myTotallySecretKey');
 
   const decryptedData = records.map((network) => ({
     ...network,

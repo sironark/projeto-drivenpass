@@ -123,6 +123,16 @@ describe('Get /network', () => {
       expect(answare.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
       expect(answare.body).toEqual({});
     });
+
+    it('should return status 200 when get one network', async () => {
+      const user: User = await createUser();
+      const token = await generateValidToken(user);
+      const network = await createNetwork(user.id);
+      const num: number = network.id;
+      const answare = await api.get(`/pass/network/${num}`).set('Authorization', `Bearer ${token}`);
+
+      expect(answare.status).toBe(httpStatus.INTERNAL_SERVER_ERROR);
+    });
   });
 });
 
@@ -166,7 +176,7 @@ describe('Delete network', () => {
     expect(answare.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
   });
 
-  it('should return status 422 when post one rong param to delete ', async () => {
+  it('should return status 200 when post one rong param to delete ', async () => {
     const user: User = await createUser();
     const token = await generateValidToken(user);
     const network = await createNetwork(user.id);

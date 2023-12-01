@@ -59,6 +59,15 @@ async function createCredential(userId: number, url?: string) {
   return credential;
 }
 
+export async function generateValidToken(user?: User) {
+  const incomingUser = user || (await createUser());
+  const token = jwt.sign({ userId: incomingUser.id }, process.env.JWT_SECRET);
+
+  await createSession(token);
+
+  return token;
+}
+
 const api = supertest(app);
 
 describe('Get /credential', () => {
@@ -150,5 +159,15 @@ describe('Delete credentials', () => {
     const answare = await api.delete('/pass/credential/:-1').set('Authorization', `Bearer ${token}`);
 
     expect(answare.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
+  });
+
+  it('should return status 200 when post one rong param to delete ', async () => {
+    const user: User = await createUser();
+    const token = await generateValidToken(user);
+    const network = await createCredential(user.id);
+    const num = network.id;
+    const answare = await api.delete(`/pass/credential/${num}`).set('Authorization', `Bearer ${token}`);
+
+    expect(answare.status).toBe(httpStatus.OK);
   });
 });
