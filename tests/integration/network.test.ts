@@ -118,7 +118,6 @@ describe('Get /network', () => {
       const user: User = await createUser();
       const token = await generateValidToken(user);
       const network = await createNetwork(user.id);
-      console.log(network);
       const answare = await api.get(`/pass/network/:${Number(network.id)}`).set('Authorization', `Bearer ${token}`);
 
       expect(answare.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
@@ -165,5 +164,15 @@ describe('Delete network', () => {
     const answare = await api.delete('/pass/network/:-1').set('Authorization', `Bearer ${token}`);
 
     expect(answare.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
+  });
+
+  it('should return status 422 when post one rong param to delete ', async () => {
+    const user: User = await createUser();
+    const token = await generateValidToken(user);
+    const network = await createNetwork(user.id);
+    const num = network.id;
+    const answare = await api.delete(`/pass/network/${num}`).set('Authorization', `Bearer ${token}`);
+
+    expect(answare.status).toBe(httpStatus.OK);
   });
 });
