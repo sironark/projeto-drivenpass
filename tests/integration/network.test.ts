@@ -124,6 +124,23 @@ describe('Get /network', () => {
       expect(answare.body).toEqual({});
     });
 
+    it('should return status 400 when get one network', async () => {
+      const user: User = await createUser();
+      const user2: User = await createUser();
+
+      await generateValidToken(user);
+      const token2 = await generateValidToken(user2);
+
+      const network = await createNetwork(user.id);
+      await createNetwork(user2.id);
+
+      const num: number = network.id;
+      const answare = await api.get(`/pass/network/${num}`).set('Authorization', `Bearer ${token2}`);
+
+      expect(answare.status).toBe(httpStatus.BAD_REQUEST);
+      expect(answare.body).toEqual({ message: 'Invalid data: This network is not yours!' });
+    });
+
     it('should return status 200 when get one network', async () => {
       const user: User = await createUser();
       const token = await generateValidToken(user);
