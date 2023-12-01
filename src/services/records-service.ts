@@ -23,7 +23,7 @@ async function createCredential(userId: number, url: string, username: string, p
   if (existTwoTimes.length == 2) throw conflictError('Url already exists two times!');
 
   const titleExists = await recordRepository.getCredentialsByUserTitle(userId, title);
-  if (titleExists) throw conflictError('Title already exists times!');
+  if (titleExists) throw conflictError('Title already exists!');
 
   const credential = await recordRepository.createCredential(userId, url, username, password, title);
   return credential;

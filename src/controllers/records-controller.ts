@@ -62,6 +62,7 @@ export async function deleteCredential(req: AuthenticatedRequest, res: Response)
 export async function createNetwork(req: AuthenticatedRequest, res: Response) {
   const { network, password, title } = req.body;
   const { userId } = req;
+
   const cryptr = new Cryptr('myTotallySecretKey');
   const passwordhash = cryptr.encrypt(password);
 

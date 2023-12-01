@@ -42,6 +42,11 @@ export default function errorHandlingMiddleware(
       message: error.message,
     });
   }
+  if (error.name === 'InvalidCredentialsError') {
+    return res.status(httpStatus.UNAUTHORIZED).send({
+      message: error.message,
+    });
+  }
 
   if (error.hasOwnProperty('status') && error.name === 'RequestError') {
     return res.status((error as RequestError).status).send({
